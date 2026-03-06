@@ -358,4 +358,4 @@ Requires native `<dialog>` element support. Supported in all modern browsers (Ch
 
 ## License
 
-MIT © Hamed
+MIT © Hamed Kshiem
