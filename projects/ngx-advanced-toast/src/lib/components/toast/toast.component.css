@@ -1,0 +1,315 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOAST COMPONENT — Native <dialog> as non-modal toast
+   ═══════════════════════════════════════════════════════════════════════════
+
+   CSS Custom Properties (override at :root or host element):
+   --toast-bg                    Background color
+   --toast-color                 Text color
+   --toast-border-radius         Corner radius
+   --toast-shadow                Box shadow
+   --toast-border-width          Border width
+   --toast-border-color          Border color
+   --toast-padding               Inner padding
+   --toast-min-width             Minimum width
+   --toast-max-width             Maximum width
+   --toast-font-size             Base font size
+   --toast-icon-size             Icon size
+   --toast-animation-duration    Enter/leave animation duration
+   --toast-animation-easing      Enter animation easing
+   --toast-success-color         Success accent color
+   --toast-error-color           Error accent color
+   --toast-warning-color         Warning accent color
+   --toast-info-color            Info accent color
+   --toast-loading-color         Loading accent color
+   --toast-default-color         Default accent color
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Reset native <dialog> styles ──────────────────────────────────────── */
+dialog.toast {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  max-width: none;
+  max-height: none;
+  color: inherit;
+  display: block;
+}
+
+dialog.toast:not([open]) {
+  display: none;
+}
+
+/* ─── Toast shell ─────────────────────────────────────────────────────────── */
+.toast {
+  --_accent: var(--toast-default-color, #6b7280);
+
+  position: relative;
+  min-width: var(--toast-min-width, 300px);
+  max-width: var(--toast-max-width, 480px);
+  background: var(--toast-bg, #ffffff);
+  color: var(--toast-color, #111827);
+  border-radius: var(--toast-border-radius, 10px);
+  box-shadow: var(--toast-shadow, 0 4px 24px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06));
+  border: var(--toast-border-width, 1px) solid var(--toast-border-color, rgba(0, 0, 0, 0.07));
+  overflow: hidden;
+  pointer-events: all;
+  /* Left accent stripe */
+  border-left: 4px solid var(--_accent);
+}
+
+/* ─── Per-type accent colors ─────────────────────────────────────────────── */
+.toast[data-type="success"] { --_accent: var(--toast-success-color, #16a34a); }
+.toast[data-type="error"]   { --_accent: var(--toast-error-color, #dc2626); }
+.toast[data-type="warning"] { --_accent: var(--toast-warning-color, #d97706); }
+.toast[data-type="info"]    { --_accent: var(--toast-info-color, #2563eb); }
+.toast[data-type="loading"] { --_accent: var(--toast-loading-color, #7c3aed); }
+.toast[data-type="default"] { --_accent: var(--toast-default-color, #6b7280); }
+
+/* ─── Body layout ─────────────────────────────────────────────────────────── */
+.toast__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: var(--toast-padding, 14px 14px 14px 12px);
+}
+
+/* ─── Icon ────────────────────────────────────────────────────────────────── */
+.toast__icon {
+  flex-shrink: 0;
+  width: var(--toast-icon-size, 20px);
+  height: var(--toast-icon-size, 20px);
+  margin-top: 1px;
+  color: var(--_accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toast__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Spinner animation for loading type — animate the wrapper, not the SVG class */
+.toast__icon[data-type="loading"] {
+  animation: toast-spin 0.8s linear infinite;
+}
+
+@keyframes toast-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Content ─────────────────────────────────────────────────────────────── */
+.toast__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toast__title {
+  font-size: var(--toast-title-font-size, 0.875rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--toast-color, #111827);
+}
+
+.toast__message {
+  margin: 0;
+  font-size: var(--toast-font-size, 0.875rem);
+  line-height: 1.5;
+  color: var(--toast-message-color, #374151);
+}
+
+/* ─── Close button ────────────────────────────────────────────────────────── */
+.toast__close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  color: var(--toast-close-color, #9ca3af);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  margin-top: -1px;
+}
+
+.toast__close:hover {
+  color: var(--toast-color, #111827);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.toast__close svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ─── Action buttons ──────────────────────────────────────────────────────── */
+.toast__actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 14px 12px 46px;
+  flex-wrap: wrap;
+}
+
+.toast__action {
+  padding: 5px 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  line-height: 1;
+}
+
+.toast__action:active {
+  transform: scale(0.97);
+}
+
+.toast__action[data-style="primary"] {
+  background: var(--_accent);
+  color: #ffffff;
+  border-color: var(--_accent);
+}
+
+.toast__action[data-style="primary"]:hover {
+  opacity: 0.88;
+}
+
+.toast__action[data-style="secondary"] {
+  background: transparent;
+  color: var(--toast-color, #111827);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.toast__action[data-style="secondary"]:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.toast__action[data-style="danger"] {
+  background: var(--toast-error-color, #dc2626);
+  color: #ffffff;
+  border-color: var(--toast-error-color, #dc2626);
+}
+
+.toast__action[data-style="danger"]:hover {
+  opacity: 0.88;
+}
+
+/* ─── Progress bar ────────────────────────────────────────────────────────── */
+.toast__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--_accent);
+  opacity: 0.6;
+  transform-origin: left;
+  animation: toast-progress linear forwards;
+  animation-play-state: running;
+}
+
+.toast__progress--paused {
+  animation-play-state: paused;
+}
+
+@keyframes toast-progress {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* ─── Enter animations ────────────────────────────────────────────────────── */
+@keyframes toast-enter-from-right {
+  from { opacity: 0; transform: translateX(calc(100% + 16px)); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toast-enter-from-left {
+  from { opacity: 0; transform: translateX(calc(-100% - 16px)); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toast-enter-from-top {
+  from { opacity: 0; transform: translateY(-20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toast-enter-from-bottom {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Leave animation ─────────────────────────────────────────────────────── */
+@keyframes toast-leave {
+  from { opacity: 1; transform: scale(1) translateY(0); max-height: 200px; margin-bottom: 0; }
+  to   { opacity: 0; transform: scale(0.92) translateY(-6px); max-height: 0; margin-bottom: -12px; }
+}
+
+/* ─── State-driven animation — direction-aware via data-position ──────────── */
+.toast[data-state="entering"] {
+  animation: toast-enter-from-right var(--toast-animation-duration, 300ms) var(--toast-animation-easing, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+}
+
+.toast[data-position="top-left"][data-state="entering"],
+.toast[data-position="bottom-left"][data-state="entering"] {
+  animation-name: toast-enter-from-left;
+}
+
+.toast[data-position="top-center"][data-state="entering"] {
+  animation-name: toast-enter-from-top;
+}
+
+.toast[data-position="bottom-center"][data-state="entering"] {
+  animation-name: toast-enter-from-bottom;
+}
+
+.toast[data-state="leaving"] {
+  animation: toast-leave var(--toast-animation-duration, 300ms) ease forwards;
+  pointer-events: none;
+}
+
+/* ─── Reduced motion support ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .toast[data-state="entering"],
+  .toast[data-state="leaving"] {
+    animation: none;
+    transition: opacity var(--toast-animation-duration, 300ms) ease;
+  }
+
+  .toast[data-state="leaving"] {
+    opacity: 0;
+  }
+
+  .toast__progress {
+    animation: none;
+    display: none;
+  }
+}
+
+/* ─── Dark mode ───────────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  .toast {
+    --toast-bg: #1f2937;
+    --toast-color: #f9fafb;
+    --toast-border-color: rgba(255, 255, 255, 0.08);
+    --toast-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3);
+    --toast-message-color: #d1d5db;
+    --toast-close-color: #6b7280;
+  }
+
+  .toast__action[data-style="secondary"] {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .toast__action[data-style="secondary"]:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+}

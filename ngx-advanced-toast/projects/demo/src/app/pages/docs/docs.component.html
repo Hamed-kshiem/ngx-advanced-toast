@@ -1,0 +1,546 @@
+<div class="docs">
+  <div class="docs__body">
+
+    <!-- Hero -->
+    <section class="docs__hero">
+      <div class="docs__hero-badges">
+        <span class="badge badge--indigo">Angular 21</span>
+        <span class="badge badge--slate">Native &lt;dialog&gt;</span>
+        <span class="badge badge--slate">Signals</span>
+        <span class="badge badge--slate">Zero dependencies</span>
+      </div>
+      <h1 class="docs__hero-title">ngx-advanced-toast</h1>
+      <p class="docs__hero-desc">
+        A lightweight, fully-typed Angular toast notification library built on the native
+        <code>&lt;dialog&gt;</code> element. Uses Angular Signals for reactivity, CSS-only
+        animations, and CSS custom properties for theming — no RxJS, no third-party deps.
+      </p>
+    </section>
+
+    <!-- Installation -->
+    <section class="docs__section" id="installation">
+      <h2 class="docs__section-title">Installation</h2>
+      <pre class="docs__code"><code>npm install ngx-advanced-toast</code></pre>
+      <p class="docs__text">Peer dependencies: <code>&#64;angular/core</code> ≥ 21, <code>&#64;angular/common</code> ≥ 21.</p>
+    </section>
+
+    <!-- Setup -->
+    <section class="docs__section" id="setup">
+      <h2 class="docs__section-title">Setup</h2>
+      <p class="docs__text">Register the provider in your <code>app.config.ts</code>:</p>
+      <pre class="docs__code"><code>// app.config.ts
+import &#123; provideToast &#125; from 'ngx-advanced-toast';
+
+export const appConfig: ApplicationConfig = &#123;
+  providers: [
+    provideToast(&#123;
+      position: 'top-right',
+      duration: 4000,
+      maxVisible: 5,
+      dismissible: true,
+      showProgress: true,
+    &#125;),
+  ],
+&#125;;</code></pre>
+      <p class="docs__text">Then add the container to your root template:</p>
+      <pre class="docs__code"><code>&lt;!-- app.html --&gt;
+&lt;ngx-toast-container /&gt;
+&lt;router-outlet /&gt;</code></pre>
+      <p class="docs__text">
+        Import <code>ToastContainerComponent</code> in your root component's <code>imports</code> array
+        if using standalone components.
+      </p>
+    </section>
+
+    <!-- provideToast / ToastConfig -->
+    <section class="docs__section" id="configuration">
+      <h2 class="docs__section-title">Configuration — <code>provideToast(config?)</code></h2>
+      <p class="docs__text">
+        All options are optional. Unset options fall back to the defaults shown below.
+      </p>
+      <div class="docs__table-wrap">
+        <table class="docs__table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>position</code></td>
+              <td><code>ToastPosition</code></td>
+              <td><code>'top-right'</code></td>
+              <td>Default screen position for all toasts.</td>
+            </tr>
+            <tr>
+              <td><code>duration</code></td>
+              <td><code>number</code></td>
+              <td><code>4000</code></td>
+              <td>Auto-dismiss delay in milliseconds. Set to <code>0</code> for persistent toasts.</td>
+            </tr>
+            <tr>
+              <td><code>maxVisible</code></td>
+              <td><code>number</code></td>
+              <td><code>5</code></td>
+              <td>Maximum toasts rendered simultaneously. Extra toasts are queued.</td>
+            </tr>
+            <tr>
+              <td><code>dismissible</code></td>
+              <td><code>boolean</code></td>
+              <td><code>true</code></td>
+              <td>Whether toasts can be manually dismissed by clicking the × button.</td>
+            </tr>
+            <tr>
+              <td><code>showProgress</code></td>
+              <td><code>boolean</code></td>
+              <td><code>true</code></td>
+              <td>Show an animated progress bar indicating remaining display time.</td>
+            </tr>
+            <tr>
+              <td><code>animationDuration</code></td>
+              <td><code>number</code></td>
+              <td><code>300</code></td>
+              <td>Enter/leave animation duration in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>gap</code></td>
+              <td><code>number</code></td>
+              <td><code>12</code></td>
+              <td>Vertical gap between stacked toasts in pixels.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ToastService -->
+    <section class="docs__section" id="toast-service">
+      <h2 class="docs__section-title">ToastService</h2>
+      <p class="docs__text">Inject <code>ToastService</code> anywhere in your app:</p>
+      <pre class="docs__code"><code>import &#123; ToastService &#125; from 'ngx-advanced-toast';
+
+&#64;Component(&#123;...&#125;)
+export class MyComponent &#123;
+  private toast = inject(ToastService);
+&#125;</code></pre>
+
+      <h3 class="docs__sub-title">Methods</h3>
+      <div class="docs__table-wrap">
+        <table class="docs__table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Signature</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>show()</code></td>
+              <td><code>show(options: ToastOptions): string</code></td>
+              <td>Show a fully customised toast. Returns the toast <code>id</code>.</td>
+            </tr>
+            <tr>
+              <td><code>success()</code></td>
+              <td><code>success(message: string, options?: Partial&lt;ToastOptions&gt;): string</code></td>
+              <td>Show a success toast.</td>
+            </tr>
+            <tr>
+              <td><code>error()</code></td>
+              <td><code>error(message: string, options?: Partial&lt;ToastOptions&gt;): string</code></td>
+              <td>Show an error toast.</td>
+            </tr>
+            <tr>
+              <td><code>warning()</code></td>
+              <td><code>warning(message: string, options?: Partial&lt;ToastOptions&gt;): string</code></td>
+              <td>Show a warning toast.</td>
+            </tr>
+            <tr>
+              <td><code>info()</code></td>
+              <td><code>info(message: string, options?: Partial&lt;ToastOptions&gt;): string</code></td>
+              <td>Show an info toast.</td>
+            </tr>
+            <tr>
+              <td><code>loading()</code></td>
+              <td><code>loading(message: string, options?: Partial&lt;ToastOptions&gt;): string</code></td>
+              <td>Show a persistent loading toast (spinner icon, <code>duration: 0</code>). Returns <code>id</code> for later <code>update()</code>.</td>
+            </tr>
+            <tr>
+              <td><code>update()</code></td>
+              <td><code>update(id: string, options: Partial&lt;ToastOptions&gt;): void</code></td>
+              <td>Update an existing toast in-place — type, message, duration, etc. Ideal for loading → success/error transitions.</td>
+            </tr>
+            <tr>
+              <td><code>dismiss()</code></td>
+              <td><code>dismiss(id: string): void</code></td>
+              <td>Dismiss a specific toast by id with the leave animation.</td>
+            </tr>
+            <tr>
+              <td><code>dismissAll()</code></td>
+              <td><code>dismissAll(): void</code></td>
+              <td>Dismiss all visible toasts and clear the queue.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="docs__sub-title">Signals (read-only)</h3>
+      <div class="docs__table-wrap">
+        <table class="docs__table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>visibleToasts</code></td>
+              <td><code>Signal&lt;Toast[]&gt;</code></td>
+              <td>All toasts currently rendered (up to <code>maxVisible</code>).</td>
+            </tr>
+            <tr>
+              <td><code>toastsByPosition</code></td>
+              <td><code>Signal&lt;Map&lt;ToastPosition, Toast[]&gt;&gt;</code></td>
+              <td>Visible toasts grouped by position — used internally by <code>ToastContainerComponent</code>.</td>
+            </tr>
+            <tr>
+              <td><code>queueLength</code></td>
+              <td><code>Signal&lt;number&gt;</code></td>
+              <td>Number of toasts waiting in the queue behind the visible limit.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ToastOptions -->
+    <section class="docs__section" id="toast-options">
+      <h2 class="docs__section-title">ToastOptions</h2>
+      <p class="docs__text">
+        Passed to <code>show()</code>, or as the second argument to
+        <code>success()</code> / <code>error()</code> / etc.
+        Per-toast options override the global config for that toast only.
+      </p>
+      <div class="docs__table-wrap">
+        <table class="docs__table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>message</code></td>
+              <td><code>string</code></td>
+              <td class="docs__td--center">✓</td>
+              <td>Main notification text.</td>
+            </tr>
+            <tr>
+              <td><code>type</code></td>
+              <td><code>ToastType</code></td>
+              <td></td>
+              <td>Visual style. Defaults to <code>'default'</code>.</td>
+            </tr>
+            <tr>
+              <td><code>title</code></td>
+              <td><code>string</code></td>
+              <td></td>
+              <td>Optional bold heading above the message.</td>
+            </tr>
+            <tr>
+              <td><code>duration</code></td>
+              <td><code>number</code></td>
+              <td></td>
+              <td>Override auto-dismiss delay (ms). <code>0</code> = persistent.</td>
+            </tr>
+            <tr>
+              <td><code>position</code></td>
+              <td><code>ToastPosition</code></td>
+              <td></td>
+              <td>Override screen position for this toast.</td>
+            </tr>
+            <tr>
+              <td><code>dismissible</code></td>
+              <td><code>boolean</code></td>
+              <td></td>
+              <td>Override whether the × dismiss button is shown.</td>
+            </tr>
+            <tr>
+              <td><code>showProgress</code></td>
+              <td><code>boolean</code></td>
+              <td></td>
+              <td>Override progress bar visibility for this toast.</td>
+            </tr>
+            <tr>
+              <td><code>actions</code></td>
+              <td><code>ToastAction[]</code></td>
+              <td></td>
+              <td>Interactive action buttons rendered below the message.</td>
+            </tr>
+            <tr>
+              <td><code>id</code></td>
+              <td><code>string</code></td>
+              <td></td>
+              <td>Custom id. Auto-generated if omitted (<code>toast-&#123;timestamp&#125;-&#123;random&#125;</code>).</td>
+            </tr>
+            <tr>
+              <td><code>data</code></td>
+              <td><code>unknown</code></td>
+              <td></td>
+              <td>Arbitrary metadata attached to the toast (not displayed).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ToastAction -->
+    <section class="docs__section" id="toast-action">
+      <h2 class="docs__section-title">ToastAction</h2>
+      <p class="docs__text">Define interactive buttons inside a toast via the <code>actions</code> option.</p>
+      <pre class="docs__code"><code>toast.show(&#123;
+  type: 'warning',
+  message: 'Delete this item?',
+  duration: 0,
+  actions: [
+    &#123;
+      label: 'Delete',
+      style: 'danger',
+      callback: (toastId) =&gt; performDelete(),
+    &#125;,
+    &#123;
+      label: 'Cancel',
+      style: 'secondary',
+      callback: () =&gt; &#123;&#125;,
+    &#125;,
+  ],
+&#125;);</code></pre>
+      <div class="docs__table-wrap">
+        <table class="docs__table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>label</code></td>
+              <td><code>string</code></td>
+              <td class="docs__td--center">✓</td>
+              <td>Button text.</td>
+            </tr>
+            <tr>
+              <td><code>callback</code></td>
+              <td><code>(toastId: string) =&gt; void</code></td>
+              <td class="docs__td--center">✓</td>
+              <td>Called when the button is clicked. Receives the toast's id.</td>
+            </tr>
+            <tr>
+              <td><code>style</code></td>
+              <td><code>ToastActionStyle</code></td>
+              <td></td>
+              <td>Visual variant: <code>'primary'</code>, <code>'secondary'</code>, or <code>'danger'</code>. Defaults to <code>'secondary'</code>.</td>
+            </tr>
+            <tr>
+              <td><code>closeOnClick</code></td>
+              <td><code>boolean</code></td>
+              <td></td>
+              <td>Auto-dismiss the toast when the action is clicked. Default: <code>true</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Loading → Update pattern -->
+    <section class="docs__section" id="loading-pattern">
+      <h2 class="docs__section-title">Loading → Update Pattern</h2>
+      <p class="docs__text">
+        Use <code>loading()</code> to show an indeterminate spinner, then <code>update()</code>
+        to transition it to a result state. Useful for async operations like API calls.
+      </p>
+      <pre class="docs__code"><code>const toast = inject(ToastService);
+
+async function saveData() &#123;
+  const id = toast.loading('Saving changes...', &#123; title: 'Please wait' &#125;);
+
+  try &#123;
+    await api.save(data);
+    toast.update(id, &#123;
+      type: 'success',
+      title: 'Saved!',
+      message: 'Your changes have been saved.',
+      duration: 4000,
+      showProgress: true,
+    &#125;);
+  &#125; catch (err) &#123;
+    toast.update(id, &#123;
+      type: 'error',
+      title: 'Save failed',
+      message: 'Could not save changes. Please try again.',
+      duration: 0,
+      actions: [&#123; label: 'Retry', style: 'primary', callback: saveData &#125;],
+    &#125;);
+  &#125;
+&#125;</code></pre>
+    </section>
+
+    <!-- ToastLogger -->
+    <section class="docs__section" id="toast-logger">
+      <h2 class="docs__section-title">ToastLogger</h2>
+      <p class="docs__text">
+        <code>ToastLogger</code> is a thin wrapper around <code>ToastService</code> that
+        simultaneously displays a toast <em>and</em> writes a structured message to the browser
+        console — useful for debugging, error monitoring, or audit logging.
+      </p>
+      <pre class="docs__code"><code>import &#123; ToastLogger &#125; from 'ngx-advanced-toast';
+
+&#64;Component(&#123;...&#125;)
+export class MyComponent &#123;
+  private logger = inject(ToastLogger);
+
+  handleError(err: HttpErrorResponse) &#123;
+    this.logger.error('Request failed', &#123;
+      title: 'API Error',
+      data: &#123; status: err.status, url: err.url &#125;,
+    &#125;);
+    // Console output:
+    // [TOAST][ERROR] API Error: Request failed
+    // &#123; status: 500, url: '/api/users' &#125;
+  &#125;
+&#125;</code></pre>
+      <p class="docs__text"><code>ToastLogger</code> exposes the same methods as <code>ToastService</code>:</p>
+      <div class="docs__table-wrap">
+        <table class="docs__table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Console method</th>
+              <th>Extra parameter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>success()</code></td>
+              <td><code>console.log</code></td>
+              <td><code>data?: unknown</code> — logged after the message</td>
+            </tr>
+            <tr>
+              <td><code>error()</code></td>
+              <td><code>console.error</code></td>
+              <td><code>data?: unknown</code></td>
+            </tr>
+            <tr>
+              <td><code>warning()</code></td>
+              <td><code>console.warn</code></td>
+              <td><code>data?: unknown</code></td>
+            </tr>
+            <tr>
+              <td><code>info()</code></td>
+              <td><code>console.info</code></td>
+              <td><code>data?: unknown</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="docs__text">
+        Pass <code>data</code> in the options object:
+      </p>
+      <pre class="docs__code"><code>logger.error('Upload failed', &#123; data: &#123; fileSize: 104857600, limit: 52428800 &#125; &#125;);</code></pre>
+    </section>
+
+    <!-- TypeScript Types -->
+    <section class="docs__section" id="types">
+      <h2 class="docs__section-title">TypeScript Types</h2>
+      <p class="docs__text">All types are exported from the package root:</p>
+      <pre class="docs__code"><code>import &#123;
+  ToastType,
+  ToastPosition,
+  ToastActionStyle,
+  ToastState,
+  ToastAction,
+  ToastOptions,
+  Toast,
+  ToastConfig,
+  ResolvedToastConfig,
+&#125; from 'ngx-advanced-toast';</code></pre>
+      <div class="docs__table-wrap">
+        <table class="docs__table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Values / Shape</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ToastType</code></td>
+              <td><code>'success' | 'error' | 'warning' | 'info' | 'loading' | 'default'</code></td>
+            </tr>
+            <tr>
+              <td><code>ToastPosition</code></td>
+              <td><code>'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'</code></td>
+            </tr>
+            <tr>
+              <td><code>ToastActionStyle</code></td>
+              <td><code>'primary' | 'secondary' | 'danger'</code></td>
+            </tr>
+            <tr>
+              <td><code>ToastState</code></td>
+              <td><code>'entering' | 'visible' | 'leaving'</code></td>
+            </tr>
+            <tr>
+              <td><code>ToastAction</code></td>
+              <td>Interface — see <a href="#toast-action" class="docs__link">ToastAction</a> section.</td>
+            </tr>
+            <tr>
+              <td><code>ToastOptions</code></td>
+              <td>Interface — see <a href="#toast-options" class="docs__link">ToastOptions</a> section.</td>
+            </tr>
+            <tr>
+              <td><code>ToastConfig</code></td>
+              <td>Interface — see <a href="#configuration" class="docs__link">Configuration</a> section.</td>
+            </tr>
+            <tr>
+              <td><code>Toast</code></td>
+              <td>Internal fully-resolved toast (extends <code>ToastOptions</code>, adds <code>createdAt</code>, <code>state</code>).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Public API exports -->
+    <section class="docs__section" id="exports">
+      <h2 class="docs__section-title">Public API Exports</h2>
+      <pre class="docs__code"><code>// Providers
+export &#123; provideToast &#125; from 'ngx-advanced-toast';
+
+// Services
+export &#123; ToastService &#125; from 'ngx-advanced-toast';
+export &#123; ToastLogger  &#125; from 'ngx-advanced-toast';
+
+// Components
+export &#123; ToastContainerComponent &#125; from 'ngx-advanced-toast';
+export &#123; ToastComponent          &#125; from 'ngx-advanced-toast';
+
+// Types
+export &#123;
+  ToastType, ToastPosition, ToastActionStyle, ToastState,
+  ToastAction, ToastOptions, Toast, ToastConfig, ResolvedToastConfig,
+&#125; from 'ngx-advanced-toast';</code></pre>
+    </section>
+
+  </div>
+</div>

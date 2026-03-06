@@ -1,0 +1,146 @@
+<div class="demo__body">
+
+  <!-- Position selector -->
+  <section class="demo__section">
+    <h2 class="demo__section-title">Position</h2>
+    <div class="demo__pills">
+      @for (pos of positions; track pos) {
+        <button
+          class="pill"
+          [class.pill--active]="selectedPosition() === pos"
+          (click)="setPosition(pos)"
+        >{{ pos }}</button>
+      }
+    </div>
+  </section>
+
+  <!-- Toast types -->
+  <section class="demo__section">
+    <h2 class="demo__section-title">Toast Types</h2>
+    <div class="demo__grid">
+      <button class="btn btn--success" (click)="showSuccess()">
+        <span class="btn__icon">&#10003;</span> Success
+      </button>
+      <button class="btn btn--error" (click)="showError()">
+        <span class="btn__icon">&#10005;</span> Error
+      </button>
+      <button class="btn btn--warning" (click)="showWarning()">
+        <span class="btn__icon">&#9888;</span> Warning
+      </button>
+      <button class="btn btn--info" (click)="showInfo()">
+        <span class="btn__icon">&#9432;</span> Info
+      </button>
+      <button class="btn btn--default" (click)="showDefault()">
+        Default
+      </button>
+    </div>
+  </section>
+
+  <!-- Loading pattern -->
+  <section class="demo__section">
+    <h2 class="demo__section-title">Loading &#8594; Success Pattern</h2>
+    <p class="demo__desc">Shows a loading toast then updates it to success after 2.5s — ideal for async operations.</p>
+    <div class="demo__grid">
+      <button class="btn btn--loading" (click)="showLoadingThenSuccess()">
+        Loading &#8594; Success
+      </button>
+    </div>
+  </section>
+
+  <!-- Action buttons -->
+  <section class="demo__section">
+    <h2 class="demo__section-title">Action Buttons</h2>
+    <p class="demo__desc">Toasts can include interactive action buttons (primary, secondary, danger styles).</p>
+    <div class="demo__grid">
+      <button class="btn btn--warning" (click)="showWithActions()">
+        Danger + Cancel Actions
+      </button>
+      <button class="btn btn--info" (click)="showWithPrimaryAction()">
+        Primary Action
+      </button>
+    </div>
+  </section>
+
+  <!-- Persistent & no-progress -->
+  <section class="demo__section">
+    <h2 class="demo__section-title">Persistent &amp; Custom</h2>
+    <div class="demo__grid">
+      <button class="btn btn--info" (click)="showPersistent()">
+        Persistent (no auto-dismiss)
+      </button>
+      <button class="btn btn--success" (click)="showNoProgress()">
+        No Progress Bar
+      </button>
+    </div>
+  </section>
+
+  <!-- Logger -->
+  <section class="demo__section">
+    <h2 class="demo__section-title">ToastLogger</h2>
+    <p class="demo__desc">
+      <code>ToastLogger</code> wraps the service and also logs to the browser console.
+      Open DevTools &#8594; Console to see the output.
+    </p>
+    <div class="demo__grid">
+      <button class="btn btn--success" (click)="logSuccess()">
+        Logger: Success
+      </button>
+      <button class="btn btn--error" (click)="logError()">
+        Logger: Error + data
+      </button>
+    </div>
+  </section>
+
+  <!-- Queue & dismiss all -->
+  <section class="demo__section">
+    <h2 class="demo__section-title">Queue &amp; Stacking</h2>
+    <p class="demo__desc">
+      Max 5 toasts visible — overflow is queued and promoted as toasts dismiss.
+    </p>
+    <div class="demo__grid">
+      <button class="btn btn--loading" (click)="spamToasts()">
+        Spam 8 Toasts (queue overflow)
+      </button>
+      <button class="btn btn--error" (click)="dismissAll()">
+        Dismiss All
+      </button>
+    </div>
+  </section>
+
+  <!-- API reference -->
+  <section class="demo__section demo__section--code">
+    <h2 class="demo__section-title">Quick API Reference</h2>
+    <pre class="demo__code"><code>// app.config.ts
+providers: [
+  provideToast(&#123; position: 'top-right', duration: 4000 &#125;)
+]
+
+// In a component or service
+const toast = inject(ToastService);
+toast.success('Saved!', &#123; title: 'Done' &#125;);
+toast.error('Failed', &#123; duration: 0 &#125;);
+toast.warning('Session expiring');
+toast.info('Update available');
+
+// Loading &#8594; update pattern
+const id = toast.loading('Saving...');
+await save();
+toast.update(id, &#123; type: 'success', message: 'Saved!', duration: 4000 &#125;);
+
+// With actions
+toast.show(&#123;
+  type: 'warning',
+  message: 'Delete item?',
+  duration: 0,
+  actions: [
+    &#123; label: 'Delete', style: 'danger', callback: (id) =&gt; &#123;...&#125; &#125;,
+    &#123; label: 'Cancel', style: 'secondary', callback: () =&gt; &#123;&#125; &#125;,
+  ]
+&#125;);
+
+// Logger (toast + console output)
+const logger = inject(ToastLogger);
+logger.error('Request failed', &#123; data: &#123; status: 500 &#125; &#125;);</code></pre>
+  </section>
+
+</div>

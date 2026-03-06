@@ -1,0 +1,19 @@
+@for (region of activeRegions(); track region.position) {
+  <div
+    class="toast-region"
+    [attr.data-position]="region.position"
+    [style.--toast-gap.px]="config.gap"
+    role="log"
+    [attr.aria-label]="region.position + ' notifications'"
+    aria-live="polite"
+    aria-atomic="false"
+  >
+    @for (toast of region.toasts; track toast.id) {
+      <toast-item
+        [toast]="toast"
+        (dismissed)="onDismiss($event)"
+        (visibleNow)="onVisible($event)"
+      />
+    }
+  </div>
+}

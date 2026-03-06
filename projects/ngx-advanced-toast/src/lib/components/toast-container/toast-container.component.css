@@ -1,0 +1,95 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOAST CONTAINER — Fixed position regions for each corner/edge
+   ═══════════════════════════════════════════════════════════════════════════
+
+   CSS Custom Properties (set at :root to override):
+   --toast-z-index            z-index for all regions       (default: 9999)
+   --toast-region-padding     Offset from viewport edges    (default: 16px)
+   --toast-gap                Gap between stacked toasts    (default: 12px)
+   --toast-max-width          Max width per toast           (default: 480px)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.toast-region {
+  position: fixed;
+  z-index: var(--toast-z-index, 9999);
+  display: flex;
+  flex-direction: column;
+  gap: var(--toast-gap, 12px);
+  pointer-events: none; /* Container itself doesn't block clicks */
+  max-width: var(--toast-max-width, 480px);
+  width: max-content;
+}
+
+/* Toasts inside ARE clickable */
+.toast-region > * {
+  pointer-events: all;
+}
+
+/* ─── Top positions ───────────────────────────────────────────────────────── */
+.toast-region[data-position="top-right"] {
+  top: var(--toast-region-padding, 16px);
+  right: var(--toast-region-padding, 16px);
+  align-items: flex-end;
+}
+
+.toast-region[data-position="top-left"] {
+  top: var(--toast-region-padding, 16px);
+  left: var(--toast-region-padding, 16px);
+  align-items: flex-start;
+}
+
+.toast-region[data-position="top-center"] {
+  top: var(--toast-region-padding, 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+}
+
+/* ─── Bottom positions ────────────────────────────────────────────────────── */
+.toast-region[data-position="bottom-right"] {
+  bottom: var(--toast-region-padding, 16px);
+  right: var(--toast-region-padding, 16px);
+  align-items: flex-end;
+  flex-direction: column-reverse; /* Newest at bottom */
+}
+
+.toast-region[data-position="bottom-left"] {
+  bottom: var(--toast-region-padding, 16px);
+  left: var(--toast-region-padding, 16px);
+  align-items: flex-start;
+  flex-direction: column-reverse;
+}
+
+.toast-region[data-position="bottom-center"] {
+  bottom: var(--toast-region-padding, 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  flex-direction: column-reverse;
+}
+
+/* ─── Mobile: full-width toasts at bottom ────────────────────────────────── */
+@media (max-width: 480px) {
+  .toast-region {
+    left: var(--toast-region-padding, 16px) !important;
+    right: var(--toast-region-padding, 16px) !important;
+    transform: none !important;
+    align-items: stretch !important;
+    max-width: none;
+    width: auto;
+  }
+
+  .toast-region[data-position="top-left"],
+  .toast-region[data-position="top-center"],
+  .toast-region[data-position="top-right"] {
+    top: var(--toast-region-padding, 16px);
+    bottom: auto;
+  }
+
+  .toast-region[data-position="bottom-left"],
+  .toast-region[data-position="bottom-center"],
+  .toast-region[data-position="bottom-right"] {
+    bottom: var(--toast-region-padding, 16px);
+    top: auto;
+  }
+}

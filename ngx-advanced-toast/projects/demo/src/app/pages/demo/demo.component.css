@@ -1,0 +1,19 @@
+.demo__body {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .demo__body {
+    padding: 16px 16px 48px;
+  }
+
+  .btn {
+    flex: 1 1 calc(50% - 5px);
+    justify-content: center;
+  }
+}
