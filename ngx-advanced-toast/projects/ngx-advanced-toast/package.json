@@ -1,6 +1,6 @@
 {
   "name": "ngx-advanced-toast",
-  "version": "1.0.0",
+  "version": "21.0.1",
   "description": "Advanced Angular 21 toast notifications built on the native <dialog> element. Signals-first, zero RxJS, CSS-only animations, fully accessible.",
   "keywords": [
     "angular",
@@ -16,16 +16,16 @@
     "a11y"
   ],
   "author": {
-    "name": "Hamed"
+    "name": "Hamed Kshiem"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/ngx-advanced-toast.git"
+    "url": "https://github.com/Hamed-kshiem/ngx-advanced-toast.git"
   },
-  "homepage": "https://github.com/your-username/ngx-advanced-toast#readme",
+  "homepage": "https://ngx-advanced-toast.vercel.app/",
   "bugs": {
-    "url": "https://github.com/your-username/ngx-advanced-toast/issues"
+    "url": "https://github.com/Hamed-kshiem/ngx-advanced-toast/issues"
   },
   "publishConfig": {
     "access": "public"
