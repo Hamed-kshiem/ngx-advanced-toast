@@ -1,6 +1,23 @@
 {
   "name": "ngx-advanced-toast",
-  "version": "0.0.0",
+  "version": "21.0.1",
+    "repository": {
+    "type": "git",
+    "url": "https://github.com/Hamed-kshiem/ngx-advanced-toast.git"
+  },
+  "homepage": "https://ngx-advanced-toast.vercel.app/",
+  "author": {"name": "Hamed Kshiem"},
+  "license": "MIT",
+  "description": "Advanced toast notifications for Angular applications. Easy to use, fully themeable, and built with performance in mind. No external dependencies.",
+  "keywords": [
+    "angular",
+    "toast",
+    "notifications",
+    "angular-toast",
+    "snackbar",
+    "ui",
+    "components"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve demo",
